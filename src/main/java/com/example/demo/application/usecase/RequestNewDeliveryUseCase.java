@@ -1,23 +1,25 @@
-package com.example.demo.service;
+package com.example.demo.application.usecase;
 
 import com.example.demo.application.dto.DeliveryRequestDTO;
 import com.example.demo.domain.Delivery;
 import com.example.demo.domain.enums.DeliveryStatus;
 import com.example.demo.repository.DeliveryRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.DeliveryPricingService;
+import com.example.demo.service.GoogleMapsService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
 @Service
-public class DeliveryService {
+public class RequestNewDeliveryUseCase {
 
     private final DeliveryRepository deliveryRepository;
     private final DeliveryPricingService pricingService;
     private final UserRepository userRepository;
     private final GoogleMapsService googleMapsService;
 
-    public DeliveryService(DeliveryRepository deliveryRepository,
+    public RequestNewDeliveryUseCase(DeliveryRepository deliveryRepository,
             DeliveryPricingService pricingService,
             UserRepository userRepository,
             GoogleMapsService googleMapsService) {
@@ -27,7 +29,7 @@ public class DeliveryService {
         this.googleMapsService = googleMapsService;
     }
 
-    public Delivery requestNewDelivery(DeliveryRequestDTO dto) {
+    public Delivery execute(DeliveryRequestDTO dto) {
 
         double realDistanceKm = googleMapsService.getDistanceInKm(dto.pickupAddress(), dto.dropoffAddress());
 

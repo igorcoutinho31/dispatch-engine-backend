@@ -1,30 +1,25 @@
 package com.example.demo.controller;
 
+import com.example.demo.application.dto.DeliveryRequestDTO;
+import com.example.demo.application.usecase.RequestNewDeliveryUseCase;
+import com.example.demo.domain.Delivery;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.example.demo.controller.dto.DeliveryRequestDTO;
-import com.example.demo.domain.Delivery;
-import com.example.demo.service.DeliveryService;
-
-import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/deliveries")
-@AllArgsConstructor
 public class DeliveryController {
 
-    private final DeliveryService deliveryService;
+    private final RequestNewDeliveryUseCase requestNewDeliveryUseCase;
+
+    public DeliveryController(RequestNewDeliveryUseCase requestNewDeliveryUseCase) {
+        this.requestNewDeliveryUseCase = requestNewDeliveryUseCase;
+    }
 
     @PostMapping
     public ResponseEntity<Delivery> createDelivery(@RequestBody DeliveryRequestDTO dto) {
-
-        Delivery savedDelivery = deliveryService.requestNewDelivery(dto);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedDelivery);
+        Delivery createdDelivery = requestNewDeliveryUseCase.execute(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdDelivery);
     }
 }
